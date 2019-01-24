@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">Tipster</string>
-    <string name="text_label_1">Text Label 1</string>
-    <string name="text_label_2">Text Label 2</string>
-    <string name="text_label_3">text Label 3</string>
+    <string name="text_label_1">Total Amount: </string>
+    <string name="text_label_2">No. of People: </string>
+    <string name="text_label_3">Tip Percentage (%): </string>
     <string name="radio_text_15_percent">15%</string>
     <string name="radio_text_20_percent">20%</string>
     <string name="radio_text_other">Other</string>
     <string name="button_reset">Reset</string>
     <string name="button_calculate">Calculate</string>
-    <string name="text_label_4">Text Label 4</string>
-    <string name="text_label_5">Text Label 5</string>
-    <string name="text_label_6">Text Label 6</string>
+    <string name="text_label_4">Tip Amount: </string>
+    <string name="text_label_5">Total To Pay: </string>
+    <string name="text_label_6">Total Per Person: </string>
 </resources>

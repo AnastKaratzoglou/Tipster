@@ -1,5 +1,7 @@
 package com.example.tipster;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (checkedId == R.id.radioOther){
                     editTextTipOther.setEnabled(true);
+                    editTextTipOther.setText("0");
                     editTextTipOther.requestFocus();
 
                     buttonCalculate.setEnabled(editTextAmount.getText().length() > 0
@@ -73,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
         editTextAmount.setOnKeyListener(mKeyListener);
         editTextPeople.setOnKeyListener(mKeyListener);
         editTextTipOther.setOnKeyListener(mKeyListener);
+
+        buttonCalculate.setOnClickListener(mClickListener);
+        buttonReset.setOnClickListener(mClickListener);
     }
 
     private View.OnKeyListener mKeyListener = new View.OnKeyListener() {
@@ -94,5 +100,82 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    private View.OnClickListener mClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == R.id.buttonCalculate){
+                calculate();
+            }
+            else {
+                reset();
+            }
+        }
+    };
+
+    private void reset(){
+        textTipAmount.setText("");
+        textTotalToPay.setText("");
+        textTipPerPerson.setText("");
+        editTextAmount.setText("");
+        editTextPeople.setText("");
+        editTextTipOther.setText("");
+        radioGroupTips.clearCheck();
+        radioGroupTips.check(R.id.radioFifteen);
+        editTextAmount.requestFocus();
+    }
+
+    private void calculate(){
+        Double billAmount = Double.parseDouble(editTextAmount.getText().toString());
+        Double totalPeople = Double.parseDouble(editTextPeople.getText().toString());
+        Double percentage = null;
+        boolean isError = false;
+
+        if (billAmount < 1.0){
+            showErrorAlert("Enter a valid total amount", editTextAmount.getId());
+            isError = true;
+        }
+        if (totalPeople < 1.0){
+            showErrorAlert("Enter a valid value for No. of people.",
+                    editTextPeople.getId());
+            isError = true;
+        }
+        if (radioCheckedId == -1){
+            radioCheckedId = radioGroupTips.getCheckedRadioButtonId();
+        }
+        if (radioCheckedId == R.id.radioFifteen){
+            percentage = 15.00;
+        }
+        else if (radioCheckedId == R.id.radioTwenty){
+            percentage = 20.00;
+        }
+        else if (radioCheckedId == R.id.radioOther){
+            percentage = Double.parseDouble(editTextTipOther.getText().toString());
+            if (percentage < 0){
+                showErrorAlert("Enter a valid Tip percentage", editTextTipOther.getId());
+                isError = true;
+            }
+        }
+
+        if (!isError){
+            Double tipAmount = ((billAmount * percentage) / 100);
+            Double totalAmountToPay = billAmount + tipAmount;
+            Double perPersonPays = totalAmountToPay / totalPeople;
+
+            textTipAmount.setText(tipAmount.toString());
+            textTotalToPay.setText(totalAmountToPay.toString());
+            textTipPerPerson.setText(perPersonPays.toString());
+        }
+    }
+
+    private void showErrorAlert(String errorMessage, final int fieldId){
+        new AlertDialog.Builder(this).setTitle("Error").setMessage(errorMessage)
+                .setNeutralButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        findViewById(fieldId).requestFocus();
+                    }
+                }).show();
+    }
 
 }
